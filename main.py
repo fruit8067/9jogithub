@@ -41,27 +41,27 @@ def get_current_school_period(schedule):
 current_period = get_current_school_period(school_schedule)
 print(f"현재 {current_period}입니다.")
 
-customtkinter.set_appearance_mode("dark")
+customtkinter.set_appearance_mode("dark") # 태마 // 버튼 색깔
 customtkinter.set_default_color_theme("blue")
 
-app = customtkinter.CTk()
-app.title("Custom App by 9's group")
+app = customtkinter.CTk() #실행 설정
+app.title("Custom App by 9's group") # 이름 변경하고 싶으면 말하셈
 app.geometry("640x480")
 
-my_font = customtkinter.CTkFont(family="Noto Sans KR Medium", size=30, )
+my_font = customtkinter.CTkFont(family="Noto Sans KR Medium", size=30) # 저기 파일에서 폰트 다운 받으셈
 
 
-
+#탭 생성, 과목, 밥, 날씨 탭 생성, 초기에는 과목 보여주기
 tabView = customtkinter.CTkTabview(app, width=640, height=480, corner_radius=10)
 tabView.add("Subject")
 tabView.add("Meal")
-tabView.add("Whether")
+tabView.add("Weather")
 tabView.set("Subject")
 tabView.pack(padx=20, pady=10)
 
 
 
-#과목
+#과목 진행바, 택스트 설정
 progressbar = customtkinter.CTkProgressBar(tabView.tab("Subject"), width=500, height=5)
 progressbar.set(0)
 progressbar.place(relx = 0.5, rely=0.1, anchor = tkinter.CENTER)
@@ -70,7 +70,7 @@ text_subject.place(relx=0.5,rely=0.5,anchor=tkinter.CENTER)
 text_subject.tag_config("center", justify="center")
 text_subject.insert("0.0", "과목", "center") # 여기 과목 자리에 현재 시각 과목 넣기, 쉬는시간에는 다음 과목 보여주기
 
-#progressbar.set( 0부터 1까지의 실수) -> 진행바 진행 설정 -> 수업시간에는 1분에 1/60만큼, 쉬는시간에는 1분에 1/10만큼 움직여야함
+#progressbar.set( 0부터 1까지의 실수) -> 진행바 진행 설정 -> 수업시간에는 1분에 1/60만큼, 쉬는시간에는 1분에 1/10만큼 움직여야함 -> 여기 라인에 progressbar.set() 넣어면 됨
 #
 
 #급식
@@ -81,10 +81,11 @@ text_meal.insert("end", "Hello world", "center") # 여기 Hello world 자리에 
 
 
 #1교시부터 5교시 시작전까지는 meal.meal(0)을 사용하여 점심을, 5교시부터 야자 2교시까지는 meal.meal(1)을 사용하여 저녁을 보여줘야함
+#print(meal.meal(0)) -> 점심 메뉴 보여줌
 
 #날씨
 
-#그날의 날씨에 맞는 흐림, 맑음, 비 같은 일러스트 필요 https://www.flaticon.com/search?word=weather&color=black&shape=outline 여기서 찾아보는것이 중요할듯
+#저기 img 파일에 날씨별로 png파일이 있음 그래서 그냥 김해 날씨 찾는 함수 하나만 만들어주면 내가 한번 만들어봄
 
 
 
