@@ -32,7 +32,9 @@ def get_current_school_period(schedule):
         if start <= now <= end:
             ans = period
         elif now >= end:
-            ans = f"{period[0]}교시 쉬는시간"
+            if period == '저녁':
+                ans = period + "이 지남"
+            else:   ans = f"{period} 쉬는시간"
     return ans
 
 
