@@ -137,14 +137,14 @@ my_font = customtkinter.CTkFont(family="Noto Sans KR Medium", size=30) # 저기 
 tabView = customtkinter.CTkTabview(app, width=640, height=480, corner_radius=10)
 tabView.add("Subject")
 tabView.add("Meal")
-tabView.add("Weather")
+tabView.add("Weather") #라벨로 만들기
 tabView.set("Subject")
 tabView._segmented_button.configure(font=my_font)
 tabView.pack(padx=20, pady=10)
 
 
 
-#과목 진행바, 택스트 설정
+#과목 진행바, 택스트 설정 라벨로 봐꾸기
 progressbar = customtkinter.CTkProgressBar(tabView.tab("Subject"), width=500, height=5)
 progressbar.set(0)
 progressbar.place(relx = 0.5, rely=0.1, anchor = tkinter.CENTER)
@@ -184,7 +184,7 @@ get_time()
 #progressbar.set( 0부터 1까지의 실수) -> 진행바 진행 설정 -> 수업시간에는 1분에 1/60만큼, 쉬는시간에는 1분에 1/10만큼 움직여야함 -> 여기 라인에 progressbar.set() 넣어면 됨
 
 
-#급식
+#급식 라벨로 바꾸기
 text_meal = customtkinter.CTkTextbox(tabView.tab("Meal"), width=400, height=100, font=my_font)
 text_meal.pack(fill="both", expand=True)
 text_meal.tag_config("center", justify="center")
