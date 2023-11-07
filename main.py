@@ -5,6 +5,62 @@ import meal
 
 from datetime import datetime
 
+
+def find_subject(current_day, current_hour):
+    # 요일과 교시에 따라 과목을 매핑하는 딕셔너리
+    schedule = {
+        '월요일': {
+            1: '체육',
+            2: 'A',
+            3: 'B',
+            4: '창체',
+            5: '독서',
+            6: 'C',
+            7: '수학',
+        },
+        '화요일': {
+            1: '독서',
+            2: '수학',
+            3: 'C',
+            4: 'C',
+            5: '일본어',
+            6: '영어',
+            7: '음악',
+        },
+        '수요일': {
+            1: 'B',
+            2: 'B',
+            3: '영어',
+            4: 'A',
+            5: '창체',
+            6: '창체',
+
+        },
+        '목요일': {
+            1: '체육',
+            2: 'B',
+            3: '영어',
+            4: '음악',
+            5: 'A',
+            6: 'A',
+            7: '수학',
+        },
+        '금요일': {
+            1: '독서',
+            2: '독서',
+            3: '영어',
+            4: '진로',
+            5: 'C',
+            6: '수학',
+            7: '일본어',
+        }
+    }
+    if current_day in schedule and current_hour in schedule[current_day]:
+        return schedule[current_day][current_hour]
+    else:
+        return "해당 요일과 교시에는 과목이 없습니다."
+
+
 # 학교 시간표
 school_schedule = [
     ("1교시", "08:45", "09:35"),
@@ -25,20 +81,47 @@ school_schedule = [
 def get_current_school_period(schedule):
     # 현재 시간 구하기
     now = datetime.now().time()
+
+    ans = ''
     for period, start_time, end_time in schedule:
         start = datetime.strptime(start_time, "%H:%M").time()
         end = datetime.strptime(end_time, "%H:%M").time()
 
         if start <= now <= end:
-            return period
+            ans = period
+
         elif now >= end:
             if period == '저녁':
-                return period + "이 지남"
-            else:   return f"{period} 쉬는시간"
+                ans = period + "이 지남"
+            else:   ans = f"{period} 쉬는시간"
+    return ans
+
 
 
 current_period = get_current_school_period(school_schedule)
 print(f"현재 {current_period}입니다.")
+
+
+
+def current_subject():
+    try:
+        t = ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일']
+        day = t[datetime.today().weekday()]
+        current_period = get_current_school_period(school_schedule)
+
+
+        if len(current_period) > 4:
+            current_period = str((int(current_period[0]) + 1)) + "교시"
+            return "다음교시 : " + find_subject(day, int(current_period[0]))
+        else:
+            return find_subject(day,int(current_period[0]))
+    except:
+        print(get_current_school_period(school_schedule))
+
+
+
+print(current_subject())
+
 
 customtkinter.set_appearance_mode("dark") # 태마 // 버튼 색깔
 customtkinter.set_default_color_theme("blue")
@@ -65,13 +148,41 @@ tabView.pack(padx=20, pady=10)
 progressbar = customtkinter.CTkProgressBar(tabView.tab("Subject"), width=500, height=5)
 progressbar.set(0)
 progressbar.place(relx = 0.5, rely=0.1, anchor = tkinter.CENTER)
-text_subject = customtkinter.CTkTextbox(tabView.tab("Subject"), width=400, height=100, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=100 ),fg_color="transparent")
+
+#과목 얻기
+def get_subject():
+    string = current_subject()
+    try:
+        if len(string) < 4:
+            text_subject.configure(text=string)
+            text_subject.after(1000,get_subject)
+        else:
+            text_subject.configure(text=string,  font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=80))
+            text_subject.after(1000, get_subject)
+    except:
+        print(f"에러 발생 string = {string}")
+        text_subject.after(1000, get_subject)
+
+text_subject = customtkinter.CTkLabel(tabView.tab("Subject"), width=400, height=100, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=100 ),fg_color="transparent")
 text_subject.place(relx=0.5,rely=0.5,anchor=tkinter.CENTER)
-text_subject.tag_config("center", justify="center")
-text_subject.insert("0.0", "과목", "center") # 여기 과목 자리에 현재 시각 과목 넣기, 쉬는시간에는 다음 과목 보여주기
+get_subject()
+
+#시간 봐꾸기
+def get_time():
+    string = datetime.now().strftime('%H:%M:%S %p')
+    Timelbl.configure(text=string)
+    Timelbl.after(1000, get_time)
+
+Timelbl = customtkinter.CTkLabel(tabView.tab("Subject"),
+                                 font=my_font)
+Timelbl.place(relx=0.5,rely=0.9,anchor=tkinter.CENTER)
+get_time()
+
+
+
 
 #progressbar.set( 0부터 1까지의 실수) -> 진행바 진행 설정 -> 수업시간에는 1분에 1/60만큼, 쉬는시간에는 1분에 1/10만큼 움직여야함 -> 여기 라인에 progressbar.set() 넣어면 됨
-#
+
 
 #급식
 text_meal = customtkinter.CTkTextbox(tabView.tab("Meal"), width=400, height=100, font=my_font)
