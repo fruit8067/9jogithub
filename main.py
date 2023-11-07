@@ -56,6 +56,7 @@ tabView.add("Subject")
 tabView.add("Meal")
 tabView.add("Weather")
 tabView.set("Subject")
+tab_view._segmented_button.configure(font=my_font)
 tabView.pack(padx=20, pady=10)
 
 
@@ -64,7 +65,7 @@ tabView.pack(padx=20, pady=10)
 progressbar = customtkinter.CTkProgressBar(tabView.tab("Subject"), width=500, height=5)
 progressbar.set(0)
 progressbar.place(relx = 0.5, rely=0.1, anchor = tkinter.CENTER)
-text_subject = customtkinter.CTkTextbox(tabView.tab("Subject"), width=400, height=300, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=200 ),fg_color="transparent")
+text_subject = customtkinter.CTkTextbox(tabView.tab("Subject"), width=400, height=100, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=100 ),fg_color="transparent")
 text_subject.place(relx=0.5,rely=0.5,anchor=tkinter.CENTER)
 text_subject.tag_config("center", justify="center")
 text_subject.insert("0.0", "과목", "center") # 여기 과목 자리에 현재 시각 과목 넣기, 쉬는시간에는 다음 과목 보여주기
