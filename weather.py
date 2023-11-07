@@ -26,13 +26,13 @@ class Weather:
         }
 
         self.response = requests.get(url, params=params, verify=False)
-
+        #self.res_json = json.loads(self.response.text)
 
         self.state = self.set_weather_state()
         self.temperature = self.set_weather_temperature()
 
     def set_weather_state(self):
-        return self.response.content
+        return self.response.text
 
     def set_weather_temperature(self):
         return 0
