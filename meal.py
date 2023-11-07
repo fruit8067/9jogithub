@@ -44,5 +44,3 @@ def meal(x):
         return string
     except:
         return "오늘은 급식이 없습니다."
-
-
