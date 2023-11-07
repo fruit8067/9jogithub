@@ -27,12 +27,12 @@ class Weather:
 
         self.response = requests.get(url, params=params, verify=False)
 
+
         self.state = self.set_weather_state()
         self.temperature = self.set_weather_temperature()
 
     def set_weather_state(self):
-        res_json = json.loads(self.response.content)
-        return res_json
+        return self.response.content
 
     def set_weather_temperature(self):
         return 0
@@ -45,4 +45,4 @@ class Weather:
 
 weather = Weather(0)
 weather_state = weather.get_weather_state()
-print("날씨 상태:", weather_state)
+print(weather_state)
