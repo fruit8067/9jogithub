@@ -12,7 +12,7 @@ from datetime import datetime
 (초단기 실황은 그 시간 날씨 정보, 초단기 예보는 1시간 뒤 예측)
 
 단기 예보 
-1일 8회 02:00, 05:00, ..., 23:00시 날씨 정보 제공, 업뎃은 02:10, 05:10, ..., 23:10시 간격으로
+1일 8회 02:00, 05:00, ..., 23:00시 날씨 정보 제공, 업뎃은 02:10, 05:10, ..., 23:10시 간격으로, 최대 3일까지 예보 제공
 
 
 *기상 정보 기호
@@ -40,22 +40,25 @@ VEC 풍향
 WSD 풍속
 
 [단기 예보]
-POP 강수확률
-PTY 강수형태
-PCP 1시간 강수량
-REH 습도
-SNO 1시간 신적설
-SKY 하늘상태
-TMP 1시간 기온
+POP 강수확률o
+PTY 강수형태o
+PCP 1시간 강수량o
+REH 습도o
+SNO 1시간 신적설o
+SKY 하늘상태o
+TMP 1시간 기온o
 TMN 일 최저기온
 TMX 일 최고기온
-UUU 풍속(동서성분)
-VVV 풍속(남북성분)
-WAV 파고
-VEC 풍향
-WSD 풍속
-
+UUU 풍속(동서성분)o
+VVV 풍속(남북성분)o
+WAV 파고o
+VEC 풍향o
+WSD 풍속o
 '''
+
+# 각 문자열은 내가 기상청에 있는거 토대로 임의로 정한거니까 어색하면 바꿔도 돼
+sky_code = {1 : '맑음', 3 : '구름 많음', 4 : '흐림'}
+pty_code = {0 : '강수 없음', 1 : '비', 2 : '비/눈', 3 : '눈', 4 : '소나기', 5 : '빗방울', 6 : '빗방울눈날림', 7 : '눈날림'}
 
 # (시/도, x, y) -> 위경도를 xy로 바꿔서 입력, 참고 : (위경도 찾기)http://map.esran.com, (위경도 to xy)https://fronteer.kr/service/kmaxy 
 cities = [('kimhae', 95, 77), ('other_city', 0, 0)]
@@ -77,29 +80,33 @@ class Weather:
         params = {
             'serviceKey': service_key,
             'pageNo': '1',
-            'numOfRows': '10',
+            'numOfRows': '5000',
             'dataType': 'JSON',
             'base_date': datetime.today().strftime("%Y%m%d"),
-            'base_time': '0600',
+            'base_time': '0500',
             'nx': cities[city_num][1],
             'ny': cities[city_num][2]
         }
 
-        self.response = requests.get(url, params=params, verify=False)
+        self.response = requests.get(url, params=params)
         self.res_json = json.loads(self.response.text)
 
-    def set_weather_state(self):
-        return self.response.text
+    '''
+    자주 쓰이는 날씨 정보는 set_weather_xxx 함수로 미리 지정하는게 최적화에 좋음, 
+    잘 안쓰이면 저거 할 필요없이 그냥 get_weather_xxx 함수 호출할 때마다 불러오게 하면 돼
+    '''
+    def set_weather_sky(self):
+
+        return 0
 
     def set_weather_temperature(self):
         return 0
 
-    def get_weather_state(self):
-        return self.state
+    def get_weather_sky(self):
+        return 0
 
     def get_weather_temperature(self):
         return self.temperature
 
-weather = Weather(0)
-weather_state = weather.set_weather_state()
-print(weather_state)
+weather = Weather(0, url_vilage)
+print(weather.response.text)
