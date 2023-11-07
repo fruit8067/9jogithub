@@ -13,33 +13,36 @@ url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst"
 service_key = "CCXilN3f875IpMsuU1XfkYU4iyxJTpmqCYlbxiaqwkMuNZ3hlWsfqnZ7P3BYNWoaFbudRMViAUpYp7IfhFaJ2w%3D%3D"
 
 class Weather:
-    def __init__(self, city_num): # city_num은 cities에 있는 도시 번호 쓰면됨 ex) 김해는 0
-        params = {'serviceKey' : service_key, 
-          'pageNo' : '1',
-          'numOfRows' : '1000',
-          'dataType' : 'JSON',
-          'base_date' : datetime.today().strftime("%Y%m%d"), # 현재 날짜
-          'base_time' : '0600', # 고정
-          'nx' : cities[city_num][1], # x 좌표
-          'ny' :  cities[city_num][2]# y 좌표
+    def __init__(self, city_num):
+        params = {
+            'serviceKey': service_key,
+            'pageNo': '1',
+            'numOfRows': '1000',
+            'dataType': 'JSON',
+            'base_date': datetime.today().strftime("%Y%m%d"),
+            'base_time': '0600',
+            'nx': cities[city_num][1],
+            'ny': cities[city_num][2]
         }
 
-        self.response = requests.get(url, params=params)
+        self.response = requests.get(url, params=params, verify=False)
 
         self.state = self.set_weather_state()
         self.temperature = self.set_weather_temperature()
-    
+
     def set_weather_state(self):
-        res_json = json.loads(self.response.text)
+        res_json = json.loads(self.response.content)
+        return res_json
 
     def set_weather_temperature(self):
         return 0
 
     def get_weather_state(self):
         return self.state
-    
+
     def get_weather_temperature(self):
         return self.temperature
-    
+
 weather = Weather(0)
-weather.get_weather_state()
+weather_state = weather.get_weather_state()
+print("날씨 상태:", weather_state)
