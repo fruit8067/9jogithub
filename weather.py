@@ -2,6 +2,11 @@ import requests
 import json
 from datetime import datetime
 
+"""
+기상청 api는 1시간마다 날씨 정보를 매시간 40분에 업데이트함
+ex) 00시 날씨 정보는 
+"""
+
 weather_list = ['Rain','Snow', 'Sun', 'Thunderstorm', 'Wind']
 
 # (시/도, x, y) -> 위경도를 xy로 바꿔서 입력
@@ -20,13 +25,13 @@ class Weather:
             'numOfRows': '1000',
             'dataType': 'JSON',
             'base_date': datetime.today().strftime("%Y%m%d"),
-            'base_time': '0600',
+            'base_time': '600',
             'nx': cities[city_num][1],
             'ny': cities[city_num][2]
         }
 
         self.response = requests.get(url, params=params, verify=False)
-        #self.res_json = json.loads(self.response.text)
+        self.res_json = json.loads(self.response.text)
 
         self.state = self.set_weather_state()
         self.temperature = self.set_weather_temperature()
