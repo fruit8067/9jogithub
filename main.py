@@ -56,7 +56,7 @@ tabView.add("Subject")
 tabView.add("Meal")
 tabView.add("Weather")
 tabView.set("Subject")
-tab_view._segmented_button.configure(font=my_font)
+tabView._segmented_button.configure(font=my_font)
 tabView.pack(padx=20, pady=10)
 
 
