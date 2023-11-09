@@ -17,7 +17,7 @@ params = {
 }
 
 response = requests.get(url, params=params)
-
+print(response)
 
 def find_meal():
     try:

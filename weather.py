@@ -40,20 +40,20 @@ VEC 풍향
 WSD 풍속
 
 [단기 예보]
-POP 강수확률o
-PTY 강수형태o
-PCP 1시간 강수량o
-REH 습도o
-SNO 1시간 신적설o
-SKY 하늘상태o
-TMP 1시간 기온o
+POP 강수확률
+PTY 강수형태
+PCP 1시간 강수량
+REH 습도
+SNO 1시간 신적설
+SKY 하늘상태
+TMP 1시간 기온
 TMN 일 최저기온
 TMX 일 최고기온
-UUU 풍속(동서성분)o
-VVV 풍속(남북성분)o
-WAV 파고o
-VEC 풍향o
-WSD 풍속o
+UUU 풍속(동서성분)
+VVV 풍속(남북성분)
+WAV 파고
+VEC 풍향
+WSD 풍속
 '''
 
 # 각 문자열은 내가 기상청에 있는거 토대로 임의로 정한거니까 어색하면 바꿔도 돼
@@ -67,46 +67,55 @@ cities = [('kimhae', 95, 77), ('other_city', 0, 0)]
 service_key = 'CCXilN3f875IpMsuU1XfkYU4iyxJTpmqCYlbxiaqwkMuNZ3hlWsfqnZ7P3BYNWoaFbudRMViAUpYp7IfhFaJ2w=='
 
 # 초단기 실황
-url_ultra_N = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'
+url_ultra_N = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtNcst'
 
 # 초단기 예보
 url_ultra_F = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltraSrtFcst'
 
 # 단기 예보
-url_vilage = 'https://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
+url_vilage = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
 
 class Weather:
-    def __init__(self, city_num, url):
-        params = {
+    def __init__(self, city_num, url, time):
+        param = {
             'serviceKey': service_key,
             'pageNo': '1',
-            'numOfRows': '5000',
+            'numOfRows': '60',
             'dataType': 'JSON',
             'base_date': datetime.today().strftime("%Y%m%d"),
-            'base_time': '0500',
+            'base_time': time,
             'nx': cities[city_num][1],
             'ny': cities[city_num][2]
         }
 
-        self.response = requests.get(url, params=params)
+        self.response = requests.get(url, params=param)
         self.res_json = json.loads(self.response.text)
 
+        self.temperature = self.set_weather_temperature()
+        self.sky = sky_code[int(self.set_weather_sky())]
     '''
     자주 쓰이는 날씨 정보는 set_weather_xxx 함수로 미리 지정하는게 최적화에 좋음, 
     잘 안쓰이면 저거 할 필요없이 그냥 get_weather_xxx 함수 호출할 때마다 불러오게 하면 돼
     '''
     def set_weather_sky(self):
-
-        return 0
+        for i in self.res_json['response']['body']['items']['item']:
+            if(i['category'] == 'SKY'):
+                return (i['fcstValue'])
 
     def set_weather_temperature(self):
-        return 0
+        for i in self.res_json['response']['body']['items']['item']:
+            if(i['category'] == 'T1H'):
+                return i['fcstValue']
 
-    def get_weather_sky(self):
-        return 0
+'''
+사용법
 
-    def get_weather_temperature(self):
-        return self.temperature
+# 일단 url_ultra_F가 기본값
+weather = Weather(0,url_ultra_F,'1230')
 
-weather = Weather(0, url_vilage)
-print(weather.response.text)
+# 날씨 상태 EX) 맑음, 흐림, ..
+print(weather.sky)
+
+# 기온 (숫자만 나옴)
+print(weather.temperature)
+'''            
