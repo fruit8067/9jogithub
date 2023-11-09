@@ -35,7 +35,7 @@ def meal(x):
     data = find_meal()
     try:
         if x == 0:
-            string = "<중식>\n" + data[0]["DDISH_NM"].replace("<br/>", "\n") + "\n\n"
+            string = "<중식>\n" + data[0]["DDISH_NM"].replace("<br/>", "\n") + "\n"
         else:
             string = "<석식>\n" + data[1]["DDISH_NM"].replace("<br/>", "\n")
         characters = "1234567890./-*()"

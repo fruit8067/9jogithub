@@ -5,6 +5,9 @@ import meal
 
 from datetime import datetime
 
+today_day = datetime.now().day
+lunch = meal.meal(0)
+dinner = meal.meal(1)
 
 def find_subject(current_day, current_hour):
     # 요일과 교시에 따라 과목을 매핑하는 딕셔너리
@@ -17,6 +20,7 @@ def find_subject(current_day, current_hour):
             5: '독서',
             6: 'C',
             7: '수학',
+            8: '자습'
         },
         '화요일': {
             1: '독서',
@@ -26,6 +30,7 @@ def find_subject(current_day, current_hour):
             5: '일본어',
             6: '영어',
             7: '음악',
+            8: '자습'
         },
         '수요일': {
             1: 'B',
@@ -34,6 +39,7 @@ def find_subject(current_day, current_hour):
             4: 'A',
             5: '창체',
             6: '창체',
+            8: '자습'
 
         },
         '목요일': {
@@ -44,6 +50,7 @@ def find_subject(current_day, current_hour):
             5: 'A',
             6: 'A',
             7: '수학',
+            8: '자습'
         },
         '금요일': {
             1: '독서',
@@ -53,12 +60,17 @@ def find_subject(current_day, current_hour):
             5: 'C',
             6: '수학',
             7: '일본어',
+            8: '자습'
         }
     }
     if current_day in schedule and current_hour in schedule[current_day]:
-        return schedule[current_day][current_hour]
+            return schedule[current_day][current_hour]
     else:
+        print(current_day,current_hour)
         return "해당 요일과 교시에는 과목이 없습니다."
+
+
+
 
 
 # 학교 시간표
@@ -116,11 +128,8 @@ def current_subject():
         else:
             return find_subject(day,int(current_period[0]))
     except:
-        print(get_current_school_period(school_schedule))
+        return current_period
 
-
-
-print(current_subject())
 
 
 customtkinter.set_appearance_mode("dark") # 태마 // 버튼 색깔
@@ -144,23 +153,21 @@ tabView.pack(padx=20, pady=10)
 
 
 
-#과목 진행바, 택스트 설정 라벨로 봐꾸기
-progressbar = customtkinter.CTkProgressBar(tabView.tab("Subject"), width=500, height=5)
-progressbar.set(0)
-progressbar.place(relx = 0.5, rely=0.1, anchor = tkinter.CENTER)
-
 #과목 얻기
 def get_subject():
     string = current_subject()
     try:
         if len(string) < 4:
             text_subject.configure(text=string)
+
             text_subject.after(1000,get_subject)
+
         else:
             text_subject.configure(text=string,  font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=80))
+
             text_subject.after(1000, get_subject)
     except:
-        print(f"에러 발생 string = {string}")
+        text_subject.configure(text="야자 // 하교",  font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=80))
         text_subject.after(1000, get_subject)
 
 text_subject = customtkinter.CTkLabel(tabView.tab("Subject"), width=400, height=100, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=100 ),fg_color="transparent")
@@ -171,6 +178,8 @@ get_subject()
 def get_time():
     string = datetime.now().strftime('%H:%M:%S %p')
     Timelbl.configure(text=string)
+    #if len(get_current_school_period(school_schedule)) > 4:
+
     Timelbl.after(1000, get_time)
 
 Timelbl = customtkinter.CTkLabel(tabView.tab("Subject"),
@@ -178,17 +187,32 @@ Timelbl = customtkinter.CTkLabel(tabView.tab("Subject"),
 Timelbl.place(relx=0.5,rely=0.9,anchor=tkinter.CENTER)
 get_time()
 
-
+print(school_schedule[0][0])
 
 
 #progressbar.set( 0부터 1까지의 실수) -> 진행바 진행 설정 -> 수업시간에는 1분에 1/60만큼, 쉬는시간에는 1분에 1/10만큼 움직여야함 -> 여기 라인에 progressbar.set() 넣어면 됨
 
+def get_meal():
+    global lunch
+    global dinner
+    global today_day
+    if datetime.now().day != today_day:
+        lunch = meal.meal(0)
+        dinner = meal.meal(1)
+        today_day = datetime.now().day
+
+    if datetime.now().strftime("%H:%M") < "13:25":
+        string = lunch
+    else:
+        string = meal
+    Meal_label.configure(text = string)
+    Meal_label.after(1000,get_meal)
 
 #급식 라벨로 바꾸기
-text_meal = customtkinter.CTkTextbox(tabView.tab("Meal"), width=400, height=100, font=my_font)
-text_meal.pack(fill="both", expand=True)
-text_meal.tag_config("center", justify="center")
-text_meal.insert("end", "Hello world", "center") # 여기 Hello world 자리에 급식 넣기
+Meal_label = customtkinter.CTkLabel(tabView.tab("Meal"), width=400,height=200,font=my_font)
+Meal_label.place(relx=0.5,rely=0.5,anchor=tkinter.CENTER)
+get_meal()
+
 
 
 #1교시부터 5교시 시작전까지는 meal.meal(0)을 사용하여 점심을, 5교시부터 야자 2교시까지는 meal.meal(1)을 사용하여 저녁을 보여줘야함
