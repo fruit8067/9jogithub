@@ -56,6 +56,9 @@ VEC 풍향
 WSD 풍속
 '''
 
+# 중요 
+time = '0000'
+
 # 각 문자열은 내가 기상청에 있는거 토대로 임의로 정한거니까 어색하면 바꿔도 돼
 sky_code = {1 : '맑음', 3 : '구름 많음', 4 : '흐림'}
 pty_code = {0 : '강수 없음', 1 : '비', 2 : '비/눈', 3 : '눈', 4 : '소나기', 5 : '빗방울', 6 : '빗방울눈날림', 7 : '눈날림'}
@@ -76,7 +79,7 @@ url_ultra_F = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltra
 url_vilage = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
 
 class Weather:
-    def __init__(self, city_num, url, time):
+    def __init__(self, city_num, url):
         param = {
             'serviceKey': service_key,
             'pageNo': '1',
@@ -93,6 +96,7 @@ class Weather:
 
         self.temperature = self.set_weather_temperature()
         self.sky = sky_code[int(self.set_weather_sky())]
+        self.rain = pty_code[int(self.sef_weather_rain())]
     '''
     자주 쓰이는 날씨 정보는 set_weather_xxx 함수로 미리 지정하는게 최적화에 좋음, 
     잘 안쓰이면 저거 할 필요없이 그냥 get_weather_xxx 함수 호출할 때마다 불러오게 하면 돼
@@ -107,10 +111,16 @@ class Weather:
             if(i['category'] == 'T1H'):
                 return i['fcstValue']
 
+    def sef_weather_rain(self):
+        for i in self.res_json['response']['body']['items']['item']:
+            if(i['category'] == 'PTY'):
+                return i['fcstValue']
+
 '''
 사용법
 
-# 일단 url_ultra_F가 기본값
+# 일단 url_ultra_F가 기본값, '1230' 이거는 12:30 시간이야, 뒤에 30이거는 바꾸면 안되고 
+  앞에 시간만 바꿔 1130, 1030 이렇게 그리고 매시간 45분( EX) 11:45분, 12:45분 )마다 호출 가능하니까 참고
 weather = Weather(0,url_ultra_F,'1230')
 
 # 날씨 상태 EX) 맑음, 흐림, ..
@@ -118,4 +128,6 @@ print(weather.sky)
 
 # 기온 (숫자만 나옴)
 print(weather.temperature)
-'''            
+'''    
+weather = Weather(0, url_ultra_F)
+print(weather.rain)
