@@ -2,6 +2,7 @@ import customtkinter
 import tkinter
 #meal.meal(0) -> 오늘의 점심, meal.meal(1) -> 오늘의 저녁을 리턴
 import meal
+from weather import *
 
 from datetime import datetime
 
@@ -221,7 +222,6 @@ get_meal()
 #날씨
 
 #저기 img 파일에 날씨별로 png파일이 있음 그래서 그냥 김해 날씨 찾는 함수 하나만 만들어주면 내가 한번 만들어봄
-
 
 
 app.mainloop()
