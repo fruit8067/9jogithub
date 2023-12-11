@@ -1,6 +1,6 @@
 import requests
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 
 '''
 초단기 실황 
@@ -75,6 +75,7 @@ url_ultra_F = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getUltra
 # 단기 예보
 url_vilage = 'http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst'
 
+
 def get_weather_time():
     current_time = datetime.now()
     hour = current_time.hour
@@ -92,6 +93,22 @@ def get_weather_time():
     current_time = current_time.replace(hour=hour, minute=minute)
     return current_time.strftime("%H%M")
 
+def get_date():
+    current_time = datetime.now()
+    hour = current_time.hour
+    minute = current_time.minute
+
+    if hour != 0:
+        return datetime.today().strftime("%Y%m%d")
+
+    if minute > 45:
+        return datetime.today().strftime("%Y%m%d")
+    else:
+        current_date = datetime.today()
+        new_date = current_date - timedelta(days=1)
+
+        return new_date.strftime("%Y%m%d")
+
 class Weather:
     def __init__(self, city_num, url):
         self.param = {
@@ -99,7 +116,7 @@ class Weather:
             'pageNo': '1',
             'numOfRows': '60',
             'dataType': 'JSON',
-            'base_date': datetime.today().strftime("%Y%m%d"),
+            'base_date': get_date(),
             'base_time': get_weather_time(),
             'nx': cities[city_num][1],
             'ny': cities[city_num][2]
@@ -109,7 +126,6 @@ class Weather:
 
         self.response = requests.get(url, params=self.param)
         self.res_json = json.loads(self.response.text)
-
         self.temperature = self.set_weather_temperature()
         self.sky = sky_code[int(self.set_weather_sky())]
         self.rain = pty_code[int(self.sef_weather_rain())]

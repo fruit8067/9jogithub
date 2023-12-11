@@ -3,8 +3,8 @@ import tkinter
 #meal.meal(0) -> 오늘의 점심, meal.meal(1) -> 오늘의 저녁을 리턴
 import meal
 from weather import *
-
 from datetime import datetime
+from PIL import Image
 
 today_day = datetime.now().day
 lunch = meal.meal(0)
@@ -220,6 +220,51 @@ get_meal()
 #print(meal.meal(0)) -> 점심 메뉴 보여줌
 
 #날씨
+weather = Weather(0,url_ultra_F)
+
+def get_img():
+    if weather.rain == '비':
+        if weather.thunder == 1:
+            return "thunderstorm.png"
+        else:
+            return "rain.png"
+    else:
+        return "sun.png"
+
+Weather_label1 = customtkinter.CTkLabel(tabView.tab("Weather"), width=50,height=50,font=my_font)
+Weather_label1.place(relx=0.3,rely=0.1,anchor=tkinter.CENTER)
+
+Weather_label2 = customtkinter.CTkLabel(tabView.tab("Weather"), width=50,height=50,font=my_font)
+Weather_label2.place(relx=0.4,rely=0.5,anchor=tkinter.CENTER)
+
+image_path = 'img/{}'.format(get_img())
+Weather_image = customtkinter.CTkImage(Image.open(image_path), size=(50, 50))
+
+Weather_label3 = customtkinter.CTkLabel(tabView.tab("Weather"), width=60,height=60,font=my_font, image=Weather_image, text = "")
+Weather_label3.place(relx=0.4,rely=0.4,anchor=tkinter.CENTER)
+Weather_label3.pack()
+
+Weather_label4 = customtkinter.CTkLabel(tabView.tab("Weather"), width=50,height=50,font=my_font)
+Weather_label4.place(relx=0.3,rely=0.3,anchor=tkinter.CENTER)
+
+def get_sky():
+    string1 = "날씨 : " + weather.sky 
+    Weather_label1.configure(text = string1)
+    Weather_label1.after(1000, get_sky)
+
+def get_rain():
+    string2 = "강수상태 : " + weather.rain
+    Weather_label2.configure(text = string2)
+    Weather_label2.after(1000, get_rain)
+
+def get_temperature():
+    string4 = "기온 : {}도".format(weather.temperature)
+    Weather_label4.configure(text = string4)
+    Weather_label4.after(1000, get_rain)
+
+get_sky()
+get_rain()
+get_temperature()
 
 #저기 img 파일에 날씨별로 png파일이 있음 그래서 그냥 김해 날씨 찾는 함수 하나만 만들어주면 내가 한번 만들어봄
 
