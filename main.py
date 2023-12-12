@@ -160,20 +160,30 @@ def get_subject():
     try:
         if len(string) < 4:
             text_subject.configure(text=string)
+            text_subject_period.configure(text=get_current_school_period(school_schedule))
 
             text_subject.after(1000,get_subject)
 
         else:
             text_subject.configure(text=string,  font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=80))
-
+            text_subject_period.configure(text=get_current_school_period(school_schedule))
             text_subject.after(1000, get_subject)
     except:
         text_subject.configure(text="야자 // 하교",  font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=80))
         text_subject.after(1000, get_subject)
 
+
+
+
 text_subject = customtkinter.CTkLabel(tabView.tab("Subject"), width=400, height=100, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=100 ),fg_color="transparent")
 text_subject.place(relx=0.5,rely=0.5,anchor=tkinter.CENTER)
+text_subject_period = customtkinter.CTkLabel(tabView.tab("Subject"), width=40, height=10, font=customtkinter.CTkFont(family="Noto Sans KR Medium", size=30 ),fg_color="transparent")
+text_subject_period.place(relx=0.5,rely=0.2,anchor=tkinter.CENTER)
 get_subject()
+
+
+
+
 
 #시간 봐꾸기
 def get_time():
@@ -188,7 +198,7 @@ Timelbl = customtkinter.CTkLabel(tabView.tab("Subject"),
 Timelbl.place(relx=0.5,rely=0.9,anchor=tkinter.CENTER)
 get_time()
 
-print(school_schedule[0][0])
+
 
 
 #progressbar.set( 0부터 1까지의 실수) -> 진행바 진행 설정 -> 수업시간에는 1분에 1/60만큼, 쉬는시간에는 1분에 1/10만큼 움직여야함 -> 여기 라인에 progressbar.set() 넣어면 됨
